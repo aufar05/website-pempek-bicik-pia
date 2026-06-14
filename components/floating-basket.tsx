@@ -99,11 +99,13 @@ useEffect(() => {
                     className="flex items-center gap-3 bg-card rounded-2xl p-3 shadow-sm"
                   >
                     {/* Product emoji */}
-                    <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-2xl flex-shrink-0">
-                      {item.product.category === 'Pempek' ? '' : 
-                       item.product.category === 'Tekwan' ? '' :
-                       item.product.category === 'Kerupuk' ? '' : ''}
-                    </div>
+                    <div className="w-14 h-14 rounded-xl overflow-hidden bg-white shadow-sm flex-shrink-0">
+                  <img
+                    src={item.product.images[0]}
+                    alt={item.product.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
 
                     {/* Product info */}
                     <div className="flex-1 min-w-0">
