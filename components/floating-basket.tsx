@@ -25,15 +25,17 @@ useEffect(() => {
     const orderLines = items.map(
       (item) => `- ${item.product.name} x${item.quantity} = ${formatPrice(item.product.price * item.quantity)}`
     )
-    const message =
-                    `Halo Kak! Saya mau pesan:
-
-                    ${orderLines.join('\n')}
-
-                    *Subtotal: ${formatPrice(totalPrice)}*
-
-                    *Belum termasuk ongkir*
-                    Mohon dibantu informasi total biaya beserta ongkir ke alamat saya ya Kak.`
+    const message = [
+  'Halo Kak! Saya mau pesan:',
+  '',
+  ...orderLines,
+  '',
+  `*Subtotal: ${formatPrice(totalPrice)}*`,
+  '',
+  '*Belum termasuk ongkir*',
+  '',
+  'Mohon dibantu informasi total biaya beserta ongkir ke alamat saya ya Kak.'
+].join('\n')
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, '_blank')
     clearCart()
