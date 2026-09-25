@@ -5,6 +5,8 @@ export const products: Product[] = [
   {
   id: 'pempek-kakap-10',
   name: 'Pempek Ikan Kakap Isi 10',
+  shortName: 'Kakap',
+  plate: '/products/plate/kakap.webp',
   price: 25000,
   category: 'Pempek',
   description: 'Paket pempek ikan kakap  isi 10 pcs terdiri dari kapal selam mini, lenjer, adaan, dan kulit. Cocok untuk camilan keluarga atau stok di rumah. Disajikan dengan cuko khas Palembang yang gurih, manis, dan pedas.',
@@ -19,6 +21,8 @@ export const products: Product[] = [
   {
     id: 'pempek-gabus-10',
     name: 'Pempek Ikan Gabus isi 10',
+    shortName: 'Gabus',
+    plate: '/products/plate/gabus.webp',
     price: 35000,
     category: 'Pempek',
     description: 'Paket pempek ikan gabus  isi 10 pcs terdiri dari kapal selam mini, lenjer, adaan, dan kulit. Cocok untuk camilan keluarga atau stok di rumah. Disajikan dengan cuko khas Palembang yang gurih, manis, dan pedas.',
@@ -33,6 +37,8 @@ export const products: Product[] = [
   {
   id: 'pempek-tenggiri-10',
   name: 'Pempek Ikan Tenggiri Isi 10',
+  shortName: 'Tenggiri',
+  plate: '/products/plate/tenggiri.webp',
   price: 45000,
   category: 'Pempek',
   description: 'Paket pempek ikan tenggiri  isi 10 pcs terdiri dari kapal selam mini, lenjer, adaan, dan kulit. Cocok untuk camilan keluarga atau stok di rumah. Disajikan dengan cuko khas Palembang yang gurih, manis, dan pedas.',
@@ -104,6 +110,17 @@ export const categories = [
   'Tekwan',
   'Kerupuk',
 ]
+
+/** Ilustrasi per kategori, juga dipakai sebagai cadangan kalau foto produk belum ada */
+export const categoryIcon: Record<string, string> = {
+  Pempek: '/icons/iconPempek.webp',
+  Tekwan: '/icons/iconTekwan.webp',
+  Kerupuk: '/icons/iconKerupuk.webp',
+}
+
+export function getProductsByCategory(category: string) {
+  return products.filter((p) => p.category === category)
+}
 
 export function formatPrice(price: number): string {
   return new Intl.NumberFormat('id-ID', {

@@ -10,6 +10,10 @@ export interface Product {
   images: string[]
   stock: number
   unit: string
+  /** Nama pendek untuk tampilan besar, mis. "Kakap" (opsional) */
+  shortName?: string
+  /** Foto piring bundar (PNG/WebP transparan) untuk hero (opsional) */
+  plate?: string
 }
 
 export interface CartItem {

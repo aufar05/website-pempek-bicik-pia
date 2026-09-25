@@ -4,10 +4,28 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * Warung Bicik Pia — "Songket & Cuko"
+ * Maroon + benang emas diambil dari songket Palembang,
+ * latar gelap dari warna cuko, krem dari kemplang panggang.
+ */
 @theme inline {
-  --font-heading: 'Quicksand', var(--font-sans);
-  --font-sans: 'Nunito', 'Nunito Fallback', sans-serif;
-  --font-mono: 'Geist Mono', 'Geist Mono Fallback';
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-gloock), Georgia, 'Times New Roman', serif;
+  --font-heading: var(--font-display);
+  --font-mono: ui-monospace, monospace;
+
+  /* Palet merek */
+  --color-cuko: #231310;
+  --color-cuko-deep: #170c0a;
+  --color-songket: #5e1320;
+  --color-songket-deep: #450e18;
+  --color-emas: #c8a04f;
+  --color-emas-soft: #e2c68a;
+  --color-kemplang: #f2e6cc;
+  --color-sagu: #fbf5e8;
+  --color-daun: #2f6b45;
+
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -39,10 +57,6 @@
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
-  --color-wood: var(--wood);
-  --color-wood-dark: var(--wood-dark);
-  --color-cream: var(--cream);
-  --color-leaf: var(--leaf);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -53,189 +67,263 @@
 }
 
 :root {
-  /* Cozy Indonesian Warung - Warm & Nostalgic */
-  --background: oklch(0.95 0.02 75);
-  --foreground: oklch(0.28 0.04 55);
-  --card: oklch(0.98 0.015 80);
-  --card-foreground: oklch(0.28 0.04 55);
-  --popover: oklch(0.99 0.01 80);
-  --popover-foreground: oklch(0.28 0.04 55);
-  --primary: oklch(0.62 0.14 55);
-  --primary-foreground: oklch(0.98 0.01 80);
-  --secondary: oklch(0.92 0.03 80);
-  --secondary-foreground: oklch(0.35 0.04 55);
-  --muted: oklch(0.90 0.025 75);
-  --muted-foreground: oklch(0.50 0.03 55);
-  --accent: oklch(0.75 0.12 140);
-  --accent-foreground: oklch(0.25 0.04 140);
-  --destructive: oklch(0.60 0.20 25);
-  --border: oklch(0.85 0.03 70);
-  --input: oklch(0.92 0.02 75);
-  --ring: oklch(0.62 0.14 55);
-  
-  /* Custom warung colors */
-  --wood: oklch(0.50 0.08 55);
-  --wood-dark: oklch(0.38 0.08 50);
-  --cream: oklch(0.96 0.02 85);
-  --leaf: oklch(0.55 0.12 145);
-  
-  --chart-1: oklch(0.62 0.14 55);
-  --chart-2: oklch(0.75 0.12 140);
-  --chart-3: oklch(0.70 0.10 85);
-  --chart-4: oklch(0.60 0.15 25);
-  --chart-5: oklch(0.65 0.08 200);
+  --background: #f2e6cc;
+  --foreground: #2b1712;
+  --card: #fbf5e8;
+  --card-foreground: #2b1712;
+  --popover: #fbf5e8;
+  --popover-foreground: #2b1712;
+  --primary: #5e1320;
+  --primary-foreground: #fbf5e8;
+  --secondary: #e9dab8;
+  --secondary-foreground: #3a211a;
+  --muted: #eadcbd;
+  --muted-foreground: #6e5347;
+  --accent: #c8a04f;
+  --accent-foreground: #231310;
+  --destructive: #b3261e;
+  --border: #dcc9a3;
+  --input: #dcc9a3;
+  --ring: #c8a04f;
+
+  --chart-1: #5e1320;
+  --chart-2: #c8a04f;
+  --chart-3: #2f6b45;
+  --chart-4: #b3261e;
+  --chart-5: #6e5347;
   --radius: 1rem;
-  --sidebar: oklch(0.94 0.02 75);
-  --sidebar-foreground: oklch(0.28 0.04 55);
-  --sidebar-primary: oklch(0.62 0.14 55);
-  --sidebar-primary-foreground: oklch(0.98 0.01 80);
-  --sidebar-accent: oklch(0.90 0.025 75);
-  --sidebar-accent-foreground: oklch(0.35 0.04 55);
-  --sidebar-border: oklch(0.85 0.03 70);
-  --sidebar-ring: oklch(0.62 0.14 55);
+  --sidebar: #fbf5e8;
+  --sidebar-foreground: #2b1712;
+  --sidebar-primary: #5e1320;
+  --sidebar-primary-foreground: #fbf5e8;
+  --sidebar-accent: #eadcbd;
+  --sidebar-accent-foreground: #3a211a;
+  --sidebar-border: #dcc9a3;
+  --sidebar-ring: #c8a04f;
+
+  --header-h: 4rem;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    @apply font-sans bg-background;
+    scroll-padding-top: calc(var(--header-h) + 0.5rem);
+    -webkit-tap-highlight-color: transparent;
+  }
   body {
     @apply bg-background text-foreground;
   }
-  html {
-    @apply font-sans bg-background;
+  :focus-visible {
+    outline: 2px solid var(--color-emas);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
 }
 
-/* Cozy animations */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
+@layer components {
+  /* Anyaman songket: kisi belah ketupat dari benang emas */
+  .songket-weave {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cg fill='none' stroke='%23C8A04F' stroke-width='1'%3E%3Cpath d='M22 4 40 22 22 40 4 22Z'/%3E%3Cpath d='M22 14 30 22 22 30 14 22Z'/%3E%3C/g%3E%3Cg fill='%23C8A04F'%3E%3Ccircle cx='0' cy='0' r='1.6'/%3E%3Ccircle cx='44' cy='0' r='1.6'/%3E%3Ccircle cx='0' cy='44' r='1.6'/%3E%3Ccircle cx='44' cy='44' r='1.6'/%3E%3Ccircle cx='22' cy='22' r='1.4'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 44px 44px;
+  }
+
+  /* Pucuk rebung: motif tumpal di tepi kain songket */
+  .pucuk-rebung {
+    height: 32px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='32' viewBox='0 0 28 32'%3E%3Cg fill='%23C8A04F'%3E%3Crect y='0' width='28' height='1.5'/%3E%3Crect y='30.5' width='28' height='1.5'/%3E%3Cpath d='M9 29 14 19 19 29Z'/%3E%3Ccircle cx='0' cy='9' r='1.6'/%3E%3Ccircle cx='28' cy='9' r='1.6'/%3E%3C/g%3E%3Cpath d='M2 29 14 6 26 29' fill='none' stroke='%23C8A04F' stroke-width='1.4'/%3E%3C/svg%3E");
+    background-size: 28px 32px;
+    background-repeat: repeat-x;
+    background-position: center;
+  }
+
+  /* Garis titik-titik ala papan menu warung */
+  .menu-leader {
+    flex: 1 1 auto;
+    min-width: 0.75rem;
+    border-bottom: 2px dotted currentColor;
+    opacity: 0.35;
+    transform: translateY(-0.3em);
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
 
-@keyframes wiggle {
-  0%, 100% { transform: rotate(-2deg); }
-  50% { transform: rotate(2deg); }
+/* ---------- Gerak ---------- */
+@keyframes plate-enter {
+  from {
+    opacity: 0;
+    transform: rotate(-70deg) scale(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes plate-swap {
+  from {
+    opacity: 0;
+    transform: rotate(110deg) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ring-enter {
+  from {
+    opacity: 0;
+    transform: rotate(-35deg) scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ring-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes stamp-pop {
+  0% {
+    opacity: 0;
+    transform: rotate(-35deg) scale(0.4);
+  }
+  70% {
+    opacity: 1;
+    transform: rotate(4deg) scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes bump {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.4);
+  }
 }
 
-@keyframes pop {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+.anim-plate-enter {
+  animation: plate-enter 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s both;
+}
+.anim-plate-swap {
+  animation: plate-swap 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.anim-ring-enter {
+  animation: ring-enter 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s both;
+}
+.anim-ring-spin {
+  animation: ring-spin 70s linear infinite;
+}
+.anim-stamp {
+  animation: stamp-pop 0.6s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+.anim-stamp-first {
+  animation-delay: 0.9s;
+}
+.anim-rise {
+  animation: rise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.anim-bump {
+  animation: bump 0.45s ease-out;
 }
 
-@keyframes sparkle {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+@media (prefers-reduced-motion: reduce) {
+  .anim-plate-enter,
+  .anim-plate-swap,
+  .anim-ring-enter,
+  .anim-ring-spin,
+  .anim-stamp,
+  .anim-rise,
+  .anim-bump {
+    animation: none !important;
+  }
 }
 
-@keyframes bounce-gentle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-.animate-wiggle {
-  animation: wiggle 2s ease-in-out infinite;
-}
-
-.animate-pop {
-  animation: pop 0.3s ease-in-out;
-}
-
-.animate-sparkle {
-  animation: sparkle 1.5s ease-in-out infinite;
-}
-
-.animate-bounce-gentle {
-  animation: bounce-gentle 2s ease-in-out infinite;
-}
-
-/* Handwritten style text */
-.handwritten {
-  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', cursive;
-  letter-spacing: 0.02em;
-}
-
-/* Wood texture pattern */
-.wood-pattern {
-  background-color: var(--wood);
-  background-image: 
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.03) 2px,
-      rgba(0,0,0,0.03) 4px
-    );
-}
-
-/* Shelf shadow */
-.shelf-shadow {
-  box-shadow: 
-    0 4px 0 -2px var(--wood-dark),
-    0 8px 16px -4px rgba(0,0,0,0.2);
-}
-
-/* Product hover effect */
-.product-hover {
-  transition: all 0.2s ease-out;
-}
-
-.product-hover:hover {
-  transform: translateY(-4px) scale(1.02);
-}
-
-.product-hover:active {
-  transform: scale(0.98);
-}
-
-/* Banner stripes */
-.banner-stripes {
-  background: repeating-linear-gradient(
-    -45deg,
-    var(--primary),
-    var(--primary) 10px,
-    oklch(0.58 0.14 55) 10px,
-    oklch(0.58 0.14 55) 20px
-  );
-}
-
-/* Jar glass effect */
-.jar-glass {
-  background: linear-gradient(
-    135deg,
-    rgba(255,255,255,0.4) 0%,
-    rgba(255,255,255,0.1) 50%,
-    rgba(255,255,255,0.05) 100%
-  );
-}
-
-/* Price tag style */
-.price-tag {
-  background: oklch(0.98 0.02 95);
-  border: 2px dashed var(--wood);
-  transform: rotate(-2deg);
-}
-
-/* Scrollbar styling */
+/* Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
-
 ::-webkit-scrollbar-track {
-  background: var(--muted);
-  border-radius: 4px;
+  background: var(--color-kemplang);
 }
-
 ::-webkit-scrollbar-thumb {
-  background: var(--wood);
-  border-radius: 4px;
+  background: var(--color-songket);
+  border-radius: 999px;
+  border: 2px solid var(--color-kemplang);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--wood-dark);
+/* Panel keranjang & detail: naik dari bawah di HP, geser dari kanan / muncul di desktop */
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes sheet-left {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes modal-pop {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.sheet-in {
+  animation: sheet-up 0.38s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.modal-in {
+  animation: sheet-up 0.38s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@media (min-width: 48rem) {
+  .sheet-in {
+    animation-name: sheet-left;
+  }
+  .modal-in {
+    animation: modal-pop 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet-in,
+  .modal-in {
+    animation: none !important;
+  }
 }

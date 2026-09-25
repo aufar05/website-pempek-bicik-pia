@@ -1,23 +1,28 @@
 import { Analytics } from '@vercel/analytics/next'
-import { Nunito, Quicksand } from 'next/font/google'
+import { Gloock, Plus_Jakarta_Sans } from 'next/font/google'
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
-const nunito = Nunito({ 
+// Display: serif tebal berkarakter untuk judul & teks melingkar
+const gloock = Gloock({
   subsets: ['latin'],
-  variable: '--font-nunito',
+  weight: '400',
+  variable: '--font-gloock',
+  display: 'swap',
 })
 
-const quicksand = Quicksand({ 
+// Body/UI: Plus Jakarta Sans, dirancang oleh Tokotype (Jakarta)
+const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  variable: '--font-quicksand',
+  variable: '--font-jakarta',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
   title: 'Warung Bicik Pia - Pempek & Makanan Khas Palembang',
-  description: 'Warung online Bicik Pia. Pempek, Tekwan dan Kerupuk khas Palembang. Dibuat dengan cinta, diantar ke rumah!',
-  generator: 'v0.app',
-  keywords: ['warung', 'pempek', 'palembang', 'tekwan', 'kerupuk', 'makanan indonesia'],
+  description:
+    'Pempek ikan kakap, gabus, dan tenggiri frozen, tekwan, dan kerupuk khas Palembang dari Warung Bicik Pia. Pesan lewat WhatsApp, tinggal goreng di rumah.',
+  keywords: ['warung', 'pempek', 'palembang', 'tekwan', 'kerupuk', 'pempek frozen', 'makanan indonesia'],
   icons: {
     icon: [
       {
@@ -40,8 +45,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  themeColor: '#8B6914',
+  viewportFit: 'cover',
+  themeColor: '#231310',
 }
 
 export default function RootLayout({
@@ -50,7 +55,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="id" className={`${nunito.variable} ${quicksand.variable} bg-background`}>
+    <html lang="id" className={`${gloock.variable} ${jakarta.variable} bg-background`}>
       <body className="font-sans antialiased">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
