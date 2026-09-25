@@ -159,7 +159,7 @@ export function WarungScene() {
             </ol>
 
             <a
-              href={whatsappLink('Halo Bicik Pia, saya mau tanya soal pesanan.')}
+              href={whatsappLink('Halo Kak, saya mau tanya soal pesanan.')}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-14 inline-flex h-14 items-center gap-2 rounded-full border border-emas/60 px-7 text-base font-semibold text-emas transition-colors hover:bg-emas hover:text-cuko"
@@ -180,7 +180,7 @@ export function WarungScene() {
           </div>
           <div className="space-y-1 text-sm md:text-right">
             <a
-              href={whatsappLink('Halo Bicik Pia!')}
+              href={whatsappLink('Halo Kak!')}
               target="_blank"
               rel="noopener noreferrer"
               className="block text-kemplang/85 underline-offset-4 hover:underline"

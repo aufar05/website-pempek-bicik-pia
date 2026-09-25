@@ -72,36 +72,39 @@ export const products: Product[] = [
     unit: 'porsi',
   },
   // Kerupuk
-  {
-    id: 'kerupuk-1',
-    name: 'Kerupuk Palembang',
-    price: 15000,
-    category: 'Kerupuk',
-    description: 'Kerupuk ikan khas Palembang, renyah dan gurih. Teman makan nasi!',
-    images: ['/products/kerupuk-palembang.png'],
-    stock: 50,
-    unit: 'bungkus',
-  },
-  {
-    id: 'kerupuk-2',
-    name: 'Kerupuk Udang',
-    price: 20000,
-    category: 'Kerupuk',
-    description: 'Kerupuk udang premium, wangi dan renyah.',
-    images: ['/products/kerupuk-udang.png'],
-    stock: 35,
-    unit: 'bungkus',
-  },
-  {
-    id: 'kerupuk-3',
-    name: 'Kerupuk Kemplang',
-    price: 12000,
-    category: 'Kerupuk',
-    description: 'Kerupuk bakar khas, aroma asap yang menggugah selera.',
-    images: ['/products/kemplang.png'],
-    stock: 45,
-    unit: 'bungkus',
-  },
+{
+  id: 'kerupuk-1',
+  name: 'Kerupuk Kemplang',
+  price: 20000,
+  category: 'Kerupuk',
+  description: 'Kerupuk ikan khas Palembang dengan cita rasa gurih dan tekstur renyah. Cocok sebagai camilan atau teman makan nasi!',
+  images: ['/products/kerupuk-palembang.png'],
+  stock: 50,
+  unit: 'bungkus',
+},
+
+{
+  id: 'kerupuk-2',
+  name: 'Kerupuk Kriting',
+  price: 20000,
+  category: 'Kerupuk',
+  description: 'Kerupuk berbentuk kriting dengan tekstur renyah dan rasa gurih. Cocok dinikmati sebagai camilan atau pelengkap makanan.',
+  images: ['/products/kerupuk-udang.png'],
+  stock: 35,
+  unit: 'bungkus',
+},
+
+{
+  id: 'kerupuk-3',
+  name: 'Kerupuk Koin',
+  price: 20000,
+  category: 'Kerupuk',
+  description: 'Kerupuk berbentuk koin dengan tekstur renyah dan rasa gurih. Nikmat sebagai camilan maupun pelengkap saat makan.',
+  images: ['/products/kemplang.png'],
+  stock: 45,
+  unit: 'bungkus',
+},
+
 ]
 
 export const categories = [
