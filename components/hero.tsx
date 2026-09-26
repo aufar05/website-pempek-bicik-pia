@@ -6,6 +6,7 @@ import { Product } from '@/lib/store'
 import { formatPrice } from '@/lib/products'
 import { cn } from '@/lib/utils'
 import { RingText } from './ring-text'
+import { StockStatus } from './stock-status'
 
 interface HeroProps {
   pempek: Product[]
@@ -145,6 +146,13 @@ export function Hero({ pempek, onAdd, onOpen }: HeroProps) {
               })}
             </div>
           </fieldset>
+
+          <StockStatus
+            key={`status-${active.id}`}
+            product={active}
+            tone="dark"
+            className="mt-4 text-sm text-kemplang/80"
+          />
 
           <div className="mt-4 flex gap-2">
             <button

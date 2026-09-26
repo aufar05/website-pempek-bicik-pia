@@ -9,6 +9,8 @@ export interface Product {
   description: string
   images: string[]
   stock: number
+  /** Batas "stok terbatas" (dari Firestore) */
+  minimumStock: number
   unit: string
   /** Nama pendek untuk tampilan besar, mis. "Kakap" (opsional) */
   shortName?: string
@@ -27,6 +29,12 @@ interface CartStore {
   removeItem: (productId: string) => void
   updateQuantity: (productId: string, quantity: number) => void
   clearCart: () => void
+  /**
+   * Samakan isi keranjang (tersimpan di localStorage) dengan katalog terbaru dari Firestore:
+   * harga & stok diperbarui, produk yang sudah tidak ada/habis dikeluarkan,
+   * jumlah dipotong kalau melebihi stok.
+   */
+  syncCatalog: (catalog: Product[]) => void
   getTotalItems: () => number
   getTotalPrice: () => number
 }
@@ -74,6 +82,16 @@ export const useCartStore = create<CartStore>()(
         })
       },
       clearCart: () => set({ items: [] }),
+      syncCatalog: (catalog) => {
+        const byId = new Map(catalog.map((p) => [p.id, p]))
+        set((state) => ({
+          items: state.items.flatMap((item) => {
+            const fresh = byId.get(item.product.id)
+            if (!fresh || fresh.stock <= 0) return []
+            return [{ product: fresh, quantity: Math.min(item.quantity, fresh.stock) }]
+          }),
+        }))
+      },
       getTotalItems: () => {
         return get().items.reduce((total, item) => total + item.quantity, 0)
       },

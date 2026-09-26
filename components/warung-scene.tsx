@@ -2,7 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Check, MessageCircle } from 'lucide-react'
-import { categoryIcon, getProductsByCategory } from '@/lib/products'
+import {
+  FEATURED_CATEGORY,
+  getCategories,
+  getCategoryIcon,
+  getProductsByCategory,
+} from '@/lib/products'
 import { Product, useCartStore } from '@/lib/store'
 import { WHATSAPP_DISPLAY, whatsappLink } from '@/lib/config'
 import { SiteHeader } from './site-header'
@@ -30,7 +35,28 @@ const steps = [
   },
 ]
 
-export function WarungScene() {
+/** ["Tekwan", "Kerupuk"] -> "Tekwan dan kerupuk" */
+function joinCategoryNames(names: string[]) {
+  const [first, ...rest] = names
+  const tail = rest.map((n) => n.toLowerCase())
+  if (tail.length === 0) return first ?? ''
+  if (tail.length === 1) return `${first} dan ${tail[0]}`
+  return `${[first, ...tail.slice(0, -1)].join(', ')}, dan ${tail[tail.length - 1]}`
+}
+
+/** Label menu navigasi: "Tekwan & kerupuk", atau "Menu lain" kalau kategorinya banyak */
+function otherNavLabel(names: string[]) {
+  if (names.length === 1) return names[0]
+  if (names.length === 2) return `${names[0]} & ${names[1].toLowerCase()}`
+  return 'Menu lain'
+}
+
+interface WarungSceneProps {
+  /** Produk aktif dari Firestore (lihat lib/catalog-source.ts) */
+  products: Product[]
+}
+
+export function WarungScene({ products }: WarungSceneProps) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [basketOpen, setBasketOpen] = useState(false)
   const [hydrated, setHydrated] = useState(false)
@@ -43,8 +69,10 @@ export function WarungScene() {
   // Keranjang disimpan di localStorage (skipHydration), muat setelah mount
   useEffect(() => {
     useCartStore.persist.rehydrate()
+    // Harga/stok di keranjang lama bisa sudah berubah di Firestore
+    useCartStore.getState().syncCatalog(products)
     setHydrated(true)
-  }, [])
+  }, [products])
 
   const handleAdd = useCallback(
     (product: Product, quantity = 1) => {
@@ -61,16 +89,34 @@ export function WarungScene() {
 
   const closeModal = useCallback(() => setSelectedProduct(null), [])
 
-  const pempek = getProductsByCategory('Pempek')
+  const categories = getCategories(products)
+  const featured = getProductsByCategory(products, FEATURED_CATEGORY)
+  const heroProducts = featured.filter((p) => p.plate)
+  const otherCategories = categories.filter((c) => c !== FEATURED_CATEGORY)
+  const otherTitle = joinCategoryNames(otherCategories)
+  const isDefaultOthers = otherCategories.join('|') === 'Tekwan|Kerupuk'
+
+  const navLinks = [
+    ...(featured.length ? [{ href: '#pempek', label: FEATURED_CATEGORY }] : []),
+    ...(otherCategories.length ? [{ href: '#menu-lain', label: otherNavLabel(otherCategories) }] : []),
+    { href: '#cara-pesan', label: 'Cara pesan' },
+  ]
 
   return (
     <div className="min-h-screen bg-kemplang">
-      <SiteHeader totalItems={hydrated ? totalItems : 0} onOpenBasket={() => setBasketOpen(true)} />
+      <SiteHeader
+        links={navLinks}
+        totalItems={hydrated ? totalItems : 0}
+        onOpenBasket={() => setBasketOpen(true)}
+      />
 
       <main>
-        <Hero pempek={pempek} onAdd={handleAdd} onOpen={setSelectedProduct} />
+        {heroProducts.length > 0 && (
+          <Hero pempek={heroProducts} onAdd={handleAdd} onOpen={setSelectedProduct} />
+        )}
 
         {/* Pempek */}
+        {featured.length > 0 && (
         <section id="pempek" className="relative bg-kemplang pb-20 pt-10 md:pb-28 md:pt-16">
           <div className="mx-auto max-w-6xl px-5">
             <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
@@ -82,7 +128,7 @@ export function WarungScene() {
             </div>
 
             <div className="no-scrollbar -mx-5 mt-10 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pb-2 md:mx-0 md:mt-14 md:grid md:grid-cols-3 md:gap-8 md:overflow-visible md:px-0">
-              {pempek.map((product) => (
+              {featured.map((product) => (
                 <ShelfItem
                   key={product.id}
                   product={product}
@@ -93,22 +139,26 @@ export function WarungScene() {
             </div>
           </div>
         </section>
+        )}
 
-        {/* Tekwan & kerupuk: papan menu di atas kain songket */}
-        <section id="tekwan-kerupuk" className="relative bg-songket text-kemplang">
+        {/* Kategori lain (Tekwan, Kerupuk, dst.): papan menu di atas kain songket */}
+        {otherCategories.length > 0 && (
+        <section id="menu-lain" className="relative bg-songket text-kemplang">
           <div aria-hidden className="pucuk-rebung" />
           <div className="mx-auto max-w-6xl px-5 pb-20 pt-14 md:pb-28 md:pt-20">
-            <h2 className="font-display text-[2.75rem] leading-none text-sagu md:text-7xl">Tekwan dan kerupuk</h2>
+            <h2 className="font-display text-[2.75rem] leading-none text-sagu md:text-7xl">{otherTitle}</h2>
             <p className="mt-4 max-w-md text-base/relaxed text-kemplang/75">
-              Kuah hangat dan yang renyah, teman makan pempek.
+              {isDefaultOthers
+                ? 'Kuah hangat dan yang renyah, teman makan pempek.'
+                : 'Teman makan pempek dari dapur yang sama.'}
             </p>
 
             <div className="mt-12 grid gap-14 md:mt-16 lg:grid-cols-2 lg:gap-16">
-              {['Tekwan', 'Kerupuk'].map((category) => (
+              {otherCategories.map((category) => (
                 <div key={category}>
                   <div className="flex items-center gap-4">
                     <img
-                      src={categoryIcon[category]}
+                      src={getCategoryIcon(category)}
                       alt=""
                       width={96}
                       height={96}
@@ -118,7 +168,7 @@ export function WarungScene() {
                     <h3 className="font-display text-4xl text-emas">{category}</h3>
                   </div>
                   <ul className="mt-4">
-                    {getProductsByCategory(category).map((product) => (
+                    {getProductsByCategory(products, category).map((product) => (
                       <MenuRow
                         key={product.id}
                         product={product}
@@ -132,6 +182,7 @@ export function WarungScene() {
             </div>
           </div>
         </section>
+        )}
 
         {/* Cara pesan */}
         <section id="cara-pesan" className="relative isolate overflow-hidden bg-cuko text-kemplang">

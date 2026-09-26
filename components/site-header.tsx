@@ -5,17 +5,13 @@ import { ShoppingBasket } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface SiteHeaderProps {
+  /** Tautan navigasi, dibentuk dari kategori yang ada di data */
+  links: { href: string; label: string }[]
   totalItems: number
   onOpenBasket: () => void
 }
 
-const links = [
-  { href: '#pempek', label: 'Pempek' },
-  { href: '#tekwan-kerupuk', label: 'Tekwan & kerupuk' },
-  { href: '#cara-pesan', label: 'Cara pesan' },
-]
-
-export function SiteHeader({ totalItems, onOpenBasket }: SiteHeaderProps) {
+export function SiteHeader({ links, totalItems, onOpenBasket }: SiteHeaderProps) {
   // Transparan di atas hero gelap, jadi krem solid setelah hero lewat
   const [solid, setSolid] = useState(false)
 

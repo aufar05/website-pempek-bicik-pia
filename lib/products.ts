@@ -1,118 +1,15 @@
-import { Product } from './store'
+import type { Product } from './store'
 
-export const products: Product[] = [
-  // Pempek Palembang
-  {
-  id: 'pempek-kakap-10',
-  name: 'Pempek Ikan Kakap Isi 10',
-  shortName: 'Kakap',
-  plate: '/products/plate/kakap.webp',
-  price: 25000,
-  category: 'Pempek',
-  description: 'Paket pempek ikan kakap  isi 10 pcs terdiri dari kapal selam mini, lenjer, adaan, dan kulit. Cocok untuk camilan keluarga atau stok di rumah. Disajikan dengan cuko khas Palembang yang gurih, manis, dan pedas.',
-  images: [
-    '/products/KakapFix.png',
-    '/products/kakap/Kakap1.jpeg',
-    '/products/kakap/Kakap2.jpeg',
-  ],
-  stock: 20,
-  unit: 'plastik',
-},
-  {
-    id: 'pempek-gabus-10',
-    name: 'Pempek Ikan Gabus isi 10',
-    shortName: 'Gabus',
-    plate: '/products/plate/gabus.webp',
-    price: 35000,
-    category: 'Pempek',
-    description: 'Paket pempek ikan gabus  isi 10 pcs terdiri dari kapal selam mini, lenjer, adaan, dan kulit. Cocok untuk camilan keluarga atau stok di rumah. Disajikan dengan cuko khas Palembang yang gurih, manis, dan pedas.',
-    images: [
-    '/products/GabusFix.png',
-    '/products/gabus/Gabus1.jpeg',
-    '/products/gabus/Gabus2.jpeg',
-  ],
-    stock: 30,
-    unit: 'plastik',
-  },
-  {
-  id: 'pempek-tenggiri-10',
-  name: 'Pempek Ikan Tenggiri Isi 10',
-  shortName: 'Tenggiri',
-  plate: '/products/plate/tenggiri.webp',
-  price: 45000,
-  category: 'Pempek',
-  description: 'Paket pempek ikan tenggiri  isi 10 pcs terdiri dari kapal selam mini, lenjer, adaan, dan kulit. Cocok untuk camilan keluarga atau stok di rumah. Disajikan dengan cuko khas Palembang yang gurih, manis, dan pedas.',
-  images: [
-    '/products/TenggiriFix.png',
-    '/products/tenggiri/Tenggiri1.jpeg',
-    '/products/tenggiri/Tenggiri2.jpeg',
-  ],
-  stock: 20,
-  unit: 'plastik',
-  },
-  // Tekwan
-  {
-    id: 'tekwan-1',
-    name: 'Tekwan Original isi 10',
-    price: 10000,
-    category: 'Tekwan',
-    description: 'Sup kaldu udang dengan bakso ikan, jamur kuping, dan bengkoang. Hangat nikmat!',
-    images: ['/products/tekwan.png'],
-    stock: 15,
-    unit: 'porsi',
-  },
-  {
-    id: 'tekwan-2',
-    name: 'Tekwan Jumbo',
-    price: 20000,
-    category: 'Tekwan',
-    description: 'Porsi besar dengan ekstra bumbu dan topping lengkap.',
-    images: ['/products/tekwan-jumbo.png'],
-    stock: 10,
-    unit: 'porsi',
-  },
-  // Kerupuk
-{
-  id: 'kerupuk-1',
-  name: 'Kerupuk Kemplang',
-  price: 20000,
-  category: 'Kerupuk',
-  description: 'Kerupuk ikan khas Palembang dengan cita rasa gurih dan tekstur renyah. Cocok sebagai camilan atau teman makan nasi!',
-  images: ['/products/kerupuk-palembang.png'],
-  stock: 50,
-  unit: 'bungkus',
-},
+/*
+ * Logika katalog di satu tempat. Datanya sendiri (nama, kategori, harga, stok,
+ * satuan, stok minimum, status aktif) berasal dari Firestore; lihat lib/catalog-source.ts.
+ */
 
-{
-  id: 'kerupuk-2',
-  name: 'Kerupuk Kriting',
-  price: 20000,
-  category: 'Kerupuk',
-  description: 'Kerupuk berbentuk kriting dengan tekstur renyah dan rasa gurih. Cocok dinikmati sebagai camilan atau pelengkap makanan.',
-  images: ['/products/kerupuk-udang.png'],
-  stock: 35,
-  unit: 'bungkus',
-},
+/** Kategori yang produknya tampil sebagai kartu foto + hero di atas */
+export const FEATURED_CATEGORY = 'Pempek'
 
-{
-  id: 'kerupuk-3',
-  name: 'Kerupuk Koin',
-  price: 20000,
-  category: 'Kerupuk',
-  description: 'Kerupuk berbentuk koin dengan tekstur renyah dan rasa gurih. Nikmat sebagai camilan maupun pelengkap saat makan.',
-  images: ['/products/kemplang.png'],
-  stock: 45,
-  unit: 'bungkus',
-},
-
-]
-
-export const categories = [
-  'Semua',
-  'Pempek',
-  'Tekwan',
-  'Kerupuk',
-]
+/** Urutan tampil kategori yang sudah dikenal; kategori baru dari Firestore ikut di belakang (A-Z) */
+const CATEGORY_ORDER = ['Pempek', 'Tekwan', 'Kerupuk']
 
 /** Ilustrasi per kategori, juga dipakai sebagai cadangan kalau foto produk belum ada */
 export const categoryIcon: Record<string, string> = {
@@ -121,8 +18,46 @@ export const categoryIcon: Record<string, string> = {
   Kerupuk: '/icons/iconKerupuk.webp',
 }
 
-export function getProductsByCategory(category: string) {
+export function getCategoryIcon(category: string) {
+  return categoryIcon[category] ?? '/placeholder.svg'
+}
+
+function categoryRank(category: string) {
+  const i = CATEGORY_ORDER.indexOf(category)
+  return i === -1 ? CATEGORY_ORDER.length : i
+}
+
+export function compareCategories(a: string, b: string) {
+  return categoryRank(a) - categoryRank(b) || a.localeCompare(b, 'id')
+}
+
+/** Kategori yang benar-benar ada di data, dalam urutan tampil */
+export function getCategories(products: Product[]): string[] {
+  return [...new Set(products.map((p) => p.category))].sort(compareCategories)
+}
+
+export function getProductsByCategory(products: Product[], category: string) {
   return products.filter((p) => p.category === category)
+}
+
+export type StockLevel = 'available' | 'low' | 'out'
+
+export interface StockStatus {
+  level: StockLevel
+  label: string
+}
+
+/**
+ * stock == 0               -> Habis
+ * stock <= minimumStock    -> Stok terbatas
+ * stock > 0                -> Tersedia
+ */
+export function getStockStatus(product: Pick<Product, 'stock' | 'minimumStock'>): StockStatus {
+  if (product.stock <= 0) return { level: 'out', label: 'Habis' }
+  if (product.stock <= product.minimumStock) {
+    return { level: 'low', label: `Stok terbatas, sisa ${product.stock}` }
+  }
+  return { level: 'available', label: `Tersedia, stok ${product.stock}` }
 }
 
 export function formatPrice(price: number): string {

@@ -2,6 +2,10 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 
+/* Konfigurasi Firebase bukan bagian tampilan website */
+@source not "../firebase";
+
+
 @custom-variant dark (&:is(.dark *));
 
 /*

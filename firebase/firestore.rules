@@ -1,0 +1,106 @@
+rules_version = '2';
+
+// Warung Bicik Pia — Firestore Security Rules
+//
+// Siapa boleh apa:
+//   Publik (website, tanpa login) : baca produk yang isActive == true. Tidak bisa menulis apa pun.
+//   Login tapi BUKAN admin        : sama seperti publik.
+//   Admin (ada dokumen admins/{uid}): baca semua produk + riwayat, tambah/ubah produk,
+//                                     ubah stok (wajib disertai stock_logs).
+// Dokumen admins/{uid} dibuat manual lewat Firebase Console, tidak bisa dari aplikasi.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function isNonNegativeInt(v) {
+      return v is int && v >= 0;
+    }
+
+    function isShortString(v, maxLen) {
+      return v is string && v.size() > 0 && v.size() <= maxLen;
+    }
+
+    function isValidProduct(d) {
+      return d.keys().hasAll(['name', 'category', 'price', 'stock', 'unit', 'minimumStock',
+                              'aliases', 'isActive', 'createdAt', 'updatedAt'])
+        && d.keys().hasOnly(['name', 'category', 'price', 'stock', 'unit', 'minimumStock',
+                             'aliases', 'isActive', 'description', 'createdAt', 'updatedAt'])
+        && isShortString(d.name, 100)
+        && isShortString(d.category, 40)
+        && isNonNegativeInt(d.price)
+        && isNonNegativeInt(d.stock)          // stok tidak pernah negatif
+        && isShortString(d.unit, 20)
+        && isNonNegativeInt(d.minimumStock)
+        && d.aliases is list && d.aliases.size() <= 30
+        && d.isActive is bool
+        && (!('description' in d) || (d.description is string && d.description.size() <= 600))
+        && d.createdAt is timestamp
+        && d.updatedAt == request.time;
+    }
+
+    function isValidStockLog(d) {
+      return d.keys().hasAll(['productId', 'productName', 'action', 'commandType', 'quantity',
+                              'stockBefore', 'stockAfter', 'source', 'createdBy', 'createdAt'])
+        && d.keys().hasOnly(['productId', 'productName', 'action', 'commandType', 'quantity',
+                             'stockBefore', 'stockAfter', 'source', 'rawCommand', 'note',
+                             'createdBy', 'createdAt'])
+        && isShortString(d.productId, 100)
+        && isShortString(d.productName, 100)
+        && d.action in ['INCREASE', 'DECREASE', 'SET_TARGET']
+        && d.commandType in ['INCREASE', 'DECREASE', 'SET_TARGET']
+        && d.source in ['MANUAL', 'VOICE']
+        && d.quantity is int && d.quantity > 0
+        && isNonNegativeInt(d.stockBefore)
+        && isNonNegativeInt(d.stockAfter)
+        && (
+          (d.action == 'INCREASE' && d.stockAfter == d.stockBefore + d.quantity)
+          || (d.action == 'DECREASE' && d.stockAfter == d.stockBefore - d.quantity)
+          || d.action == 'SET_TARGET'
+        )
+        && (!('rawCommand' in d) || (d.rawCommand is string && d.rawCommand.size() <= 500))
+        && (!('note' in d) || (d.note is string && d.note.size() <= 300))
+        && d.createdBy == request.auth.token.email
+        && d.createdAt == request.time
+        // produknya harus ada setelah transaksi/batch ini selesai
+        && existsAfter(/databases/$(database)/documents/products/$(d.productId));
+    }
+
+    match /products/{productId} {
+      // Website publik wajib memakai filter isActive == true pada query-nya.
+      allow read: if resource.data.isActive == true || isAdmin();
+
+      allow create: if isAdmin()
+        && isValidProduct(request.resource.data)
+        && request.resource.data.createdAt == request.time;
+
+      allow update: if isAdmin()
+        && isValidProduct(request.resource.data)
+        && request.resource.data.createdAt == resource.data.createdAt;
+
+      // Produk tidak dihapus, cukup dinonaktifkan (isActive = false) supaya riwayat tetap utuh.
+      allow delete: if false;
+    }
+
+    match /stock_logs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin() && isValidStockLog(request.resource.data);
+      // Riwayat tidak bisa diubah atau dihapus.
+      allow update, delete: if false;
+    }
+
+    match /admins/{uid} {
+      // Aplikasi admin perlu mengecek apakah akun yang login terdaftar sebagai admin.
+      allow get: if isSignedIn() && request.auth.uid == uid;
+      allow list, write: if false;
+    }
+  }
+}

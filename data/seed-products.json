@@ -1,0 +1,102 @@
+{
+  "_catatan": "Data awal hasil migrasi dari lib/products.ts (website v2). Dipakai oleh firebase/scripts/seed-products.mjs untuk mengisi Firestore, dan oleh website HANYA selama Firebase belum dikonfigurasi. legacyWebsiteStock = angka stok lama di website, belum tentu stok nyata.",
+  "defaultInitialStock": 0,
+  "products": [
+    {
+      "id": "pempek_kakap",
+      "name": "Pempek Ikan Kakap Isi 10",
+      "category": "Pempek",
+      "price": 25000,
+      "unit": "plastik",
+      "minimumStock": 5,
+      "aliases": ["kakap", "pempek kakap", "ikan kakap", "pempek ikan kakap"],
+      "description": "Paket pempek ikan kakap isi 10 pcs terdiri dari kapal selam mini, lenjer, adaan, dan kulit. Cocok untuk camilan keluarga atau stok di rumah. Disajikan dengan cuko khas Palembang yang gurih, manis, dan pedas.",
+      "isActive": true,
+      "legacyWebsiteStock": 20
+    },
+    {
+      "id": "pempek_gabus",
+      "name": "Pempek Ikan Gabus Isi 10",
+      "category": "Pempek",
+      "price": 35000,
+      "unit": "plastik",
+      "minimumStock": 5,
+      "aliases": ["gabus", "pempek gabus", "ikan gabus", "pempek ikan gabus"],
+      "description": "Paket pempek ikan gabus isi 10 pcs terdiri dari kapal selam mini, lenjer, adaan, dan kulit. Cocok untuk camilan keluarga atau stok di rumah. Disajikan dengan cuko khas Palembang yang gurih, manis, dan pedas.",
+      "isActive": true,
+      "legacyWebsiteStock": 30
+    },
+    {
+      "id": "pempek_tenggiri",
+      "name": "Pempek Ikan Tenggiri Isi 10",
+      "category": "Pempek",
+      "price": 45000,
+      "unit": "plastik",
+      "minimumStock": 5,
+      "aliases": ["tenggiri", "pempek tenggiri", "ikan tenggiri", "pempek ikan tenggiri"],
+      "description": "Paket pempek ikan tenggiri isi 10 pcs terdiri dari kapal selam mini, lenjer, adaan, dan kulit. Cocok untuk camilan keluarga atau stok di rumah. Disajikan dengan cuko khas Palembang yang gurih, manis, dan pedas.",
+      "isActive": true,
+      "legacyWebsiteStock": 20
+    },
+    {
+      "id": "tekwan_original",
+      "name": "Tekwan Original isi 10",
+      "category": "Tekwan",
+      "price": 10000,
+      "unit": "porsi",
+      "minimumStock": 3,
+      "aliases": ["tekwan original", "tekwan biasa", "tekwan isi 10"],
+      "description": "Sup kaldu udang dengan bakso ikan, jamur kuping, dan bengkoang. Hangat nikmat!",
+      "isActive": true,
+      "legacyWebsiteStock": 15
+    },
+    {
+      "id": "tekwan_jumbo",
+      "name": "Tekwan Jumbo",
+      "category": "Tekwan",
+      "price": 20000,
+      "unit": "porsi",
+      "minimumStock": 3,
+      "aliases": ["tekwan jumbo", "tekwan besar"],
+      "description": "Porsi besar dengan ekstra bumbu dan topping lengkap.",
+      "isActive": true,
+      "legacyWebsiteStock": 10
+    },
+    {
+      "id": "kerupuk_kemplang",
+      "name": "Kerupuk Kemplang",
+      "category": "Kerupuk",
+      "price": 20000,
+      "unit": "bungkus",
+      "minimumStock": 5,
+      "aliases": ["kemplang", "kerupuk kemplang"],
+      "description": "Kerupuk ikan khas Palembang dengan cita rasa gurih dan tekstur renyah. Cocok sebagai camilan atau teman makan nasi!",
+      "isActive": true,
+      "legacyWebsiteStock": 50
+    },
+    {
+      "id": "kerupuk_kriting",
+      "name": "Kerupuk Kriting",
+      "category": "Kerupuk",
+      "price": 20000,
+      "unit": "bungkus",
+      "minimumStock": 5,
+      "aliases": ["kriting", "keriting", "kerupuk kriting", "kerupuk keriting"],
+      "description": "Kerupuk berbentuk kriting dengan tekstur renyah dan rasa gurih. Cocok dinikmati sebagai camilan atau pelengkap makanan.",
+      "isActive": true,
+      "legacyWebsiteStock": 35
+    },
+    {
+      "id": "kerupuk_koin",
+      "name": "Kerupuk Koin",
+      "category": "Kerupuk",
+      "price": 20000,
+      "unit": "bungkus",
+      "minimumStock": 5,
+      "aliases": ["koin", "kerupuk koin"],
+      "description": "Kerupuk berbentuk koin dengan tekstur renyah dan rasa gurih. Nikmat sebagai camilan maupun pelengkap saat makan.",
+      "isActive": true,
+      "legacyWebsiteStock": 45
+    }
+  ]
+}

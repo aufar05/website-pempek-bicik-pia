@@ -7,6 +7,7 @@ import { formatPrice } from '@/lib/products'
 import { useDismiss } from '@/lib/use-dismiss'
 import { cn } from '@/lib/utils'
 import { ProductImage } from './product-image'
+import { StockStatus } from './stock-status'
 
 interface ProductModalProps {
   product: Product
@@ -38,9 +39,6 @@ export function ProductModal({ product, onClose, onAdd }: ProductModalProps) {
       onClose()
     }, 600)
   }
-
-  const stockText =
-    product.stock > 10 ? 'Stok tersedia' : product.stock > 0 ? `Sisa ${product.stock} ${product.unit}` : 'Stok habis'
 
   return (
     <div
@@ -112,16 +110,7 @@ export function ProductModal({ product, onClose, onAdd }: ProductModalProps) {
               <span className="text-muted-foreground">/ {product.unit}</span>
             </div>
 
-            <p className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
-              <span
-                aria-hidden
-                className={cn(
-                  'size-2.5 rounded-full',
-                  product.stock > 10 ? 'bg-daun' : product.stock > 0 ? 'bg-emas' : 'bg-destructive',
-                )}
-              />
-              {stockText}
-            </p>
+            <StockStatus product={product} className="mt-2 flex text-sm text-muted-foreground" />
 
             <div className="mt-8 flex items-center justify-between gap-4 border-y border-border py-4">
               <div className="inline-flex items-center rounded-full border border-border bg-card">

@@ -2,8 +2,9 @@
 
 import { Plus, ShoppingBasket } from 'lucide-react'
 import { Product } from '@/lib/store'
-import { formatPrice } from '@/lib/products'
+import { formatPrice, getStockStatus } from '@/lib/products'
 import { ProductImage } from './product-image'
+import { StockStatus } from './stock-status'
 
 interface ItemProps {
   product: Product
@@ -11,16 +12,10 @@ interface ItemProps {
   onAdd: () => void
 }
 
-function StockNote({ stock, unit }: { stock: number; unit: string }) {
-  if (stock === 0) return <>Stok habis</>
-  if (stock <= 5) return <>Sisa {stock} {unit}</>
-  return null
-}
-
 /** Kartu produk berfoto (dipakai untuk pempek) */
 export function ShelfItem({ product, onOpen, onAdd }: ItemProps) {
-  const soldOut = product.stock === 0
-  const lowStock = product.stock > 0 && product.stock <= 5
+  const status = getStockStatus(product)
+  const soldOut = status.level === 'out'
 
   return (
     <article className="group flex w-[78%] shrink-0 snap-start flex-col sm:w-[46%] md:w-auto">
@@ -35,9 +30,9 @@ export function ShelfItem({ product, onOpen, onAdd }: ItemProps) {
           className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
           fallbackClassName="object-contain p-10"
         />
-        {(soldOut || lowStock) && (
+        {status.level !== 'available' && (
           <span className="absolute left-4 top-4 rounded-full bg-songket px-3 py-1 text-xs font-semibold text-sagu">
-            <StockNote stock={product.stock} unit={product.unit} />
+            {soldOut ? 'Habis' : 'Stok terbatas'}
           </span>
         )}
       </button>
@@ -51,6 +46,7 @@ export function ShelfItem({ product, onOpen, onAdd }: ItemProps) {
       <p className="mt-1.5 text-sm text-muted-foreground">
         {product.name}, per {product.unit}
       </p>
+      <StockStatus product={product} className="mt-2 text-sm text-foreground/80" />
 
       <button
         type="button"
@@ -82,12 +78,8 @@ export function MenuRow({ product, onOpen, onAdd }: ItemProps) {
         </span>
         <span className="mt-1.5 block pr-2 text-sm/relaxed text-kemplang/70">
           {product.description}
-          {product.stock <= 5 && (
-            <span className="ml-1 font-semibold text-emas-soft">
-              (<StockNote stock={product.stock} unit={product.unit} />)
-            </span>
-          )}
         </span>
+        <StockStatus product={product} tone="dark" className="mt-2 flex text-sm text-kemplang/85" />
       </button>
       <button
         type="button"
